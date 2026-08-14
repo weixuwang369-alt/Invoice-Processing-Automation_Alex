@@ -2,7 +2,7 @@
 
 This is a working multi-agent system that automates invoice processing end
 to end. It reads an invoice (single or batch), checks it against inventory, gets an approval
-decision from an AI reviewer, and pays or rejects it. I would appreciate reading the [additional features](#additional-features-above-and-beyond) section, which I believe showcases my effort and thoughtful decisions behind the
+decision from an AI reviewer, and pays or rejects it. I would appreciate reading the [Additional Features](#additional-features-above-and-beyond) section, which I believe showcases my effort and thoughtful decisions behind behind making a useful yet delightful to use system.
 
 The system runs two ways. It runs as a command-line tool. It also runs as
 a full web application. The command-line tool meets the assignment's
