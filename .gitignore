@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+.claude/
+
+inventory.db
+logs/*.json
+edit_requests.json
+eval_report.md
+eval_report.json
+
+.env
+.secrets/
+uploaded_invoices/

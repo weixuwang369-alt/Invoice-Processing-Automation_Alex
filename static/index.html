@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Acme Invoice Processing</title>
+  <link rel="stylesheet" href="/static/app.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">AI</span>
+      <div>
+        <h1>Acme Invoice Processing</h1>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <span id="provider-badge" class="badge badge-neutral">loading&hellip;</span>
+      <button id="open-settings" class="btn btn-ghost" type="button">Settings</button>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <div class="tab-scroll">
+      <button class="tab active" data-tab="single">Single Invoice</button>
+      <button class="tab" data-tab="batch">Batch Invoices</button>
+      <button class="tab" data-tab="processed">Processed Invoices</button>
+      <button class="tab" data-tab="edit-requests">Edit Requests</button>
+      <button class="tab" data-tab="edit-approvals">Edit Approvals</button>
+      <button class="tab" data-tab="inventory">Inventory</button>
+      <button class="tab" data-tab="action-log">Action Log</button>
+    </div>
+
+    <div id="mini-status" class="mini-status idle">
+      <span class="status-dot"></span>
+      <span id="mini-status-text">Idle</span>
+    </div>
+
+    <div class="notification-wrap">
+      <button id="notification-bell" class="notification-bell" type="button" aria-label="Notifications">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+        </svg>
+        <span id="notification-badge" class="notification-badge" hidden>0</span>
+      </button>
+      <div id="notification-panel" class="notification-panel" hidden>
+        <div class="notification-panel-header"><h3>Notifications</h3></div>
+        <div id="notification-list" class="notification-list"></div>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- SINGLE INVOICE -->
+    <section id="tab-single" class="panel active">
+      <div class="card">
+        <h2>Choose an invoice</h2>
+        <div class="row">
+          <label class="field">
+            <span>From invoice folder</span>
+            <select id="invoice-select">
+              <option value="">Select an invoice&hellip;</option>
+            </select>
+          </label>
+          <div class="or-divider">or</div>
+          <label class="field dropzone" id="dropzone">
+            <span>Upload a file</span>
+            <input type="file" id="file-input" accept=".txt,.json,.csv,.xml,.pdf" />
+            <span class="dropzone-hint" id="dropzone-hint">Drag a file here. Or click to browse.</span>
+          </label>
+        </div>
+        <button id="process-btn" class="btn btn-primary" type="button" disabled>Process Invoice</button>
+      </div>
+
+      <div id="single-status-bar" class="status-bar" hidden></div>
+
+      <div id="single-result" class="result-area"></div>
+    </section>
+
+    <!-- BATCH -->
+    <section id="tab-batch" class="panel">
+      <div class="card">
+        <h2>Batch invoices</h2>
+        <p class="muted">The application processes every invoice in the main invoice folder.</p>
+        <p class="muted small" id="main-folder-status">Main invoice folder: <strong>loading&hellip;</strong></p>
+
+        <div class="row">
+          <label class="field dropzone" id="folder-dropzone" style="max-width: 320px">
+            <span>Choose a folder</span>
+            <input type="file" id="folder-input" webkitdirectory directory multiple />
+            <span class="dropzone-hint" id="folder-dropzone-hint">Click to choose a folder&hellip;</span>
+          </label>
+          <label class="checkbox-field">
+            <input type="checkbox" id="set-main-checkbox" />
+            <span>Set as main invoice folder</span>
+          </label>
+        </div>
+
+        <div class="row">
+          <button id="process-folder-btn" class="btn btn-primary" type="button">Process Folder</button>
+          <button id="stop-batch-btn" class="btn btn-danger-ghost" type="button" hidden>Stop</button>
+          <button id="use-bundled-btn" class="btn btn-ghost" type="button" hidden>Use Bundled Invoices</button>
+          <button id="reset-inventory-btn" class="btn btn-ghost" type="button">Reset Inventory and Ledger</button>
+        </div>
+        <p class="muted small">
+          If you do not choose a folder, Process Folder processes the current main invoice folder again.
+          Reset Inventory and Ledger clears the payment ledger. Do this between batch runs. If you do not
+          reset it, a second run will correctly reject each invoice as a duplicate payment.
+        </p>
+      </div>
+
+      <div id="batch-status-wrap" class="status-bar-wrap">
+        <div id="batch-status-bar" class="status-bar" hidden></div>
+        <div id="batch-status-dropdown" class="status-dropdown" hidden></div>
+      </div>
+
+      <div id="batch-summary" class="stat-row"></div>
+      <div id="batch-table-wrap"></div>
+    </section>
+
+    <!-- PROCESSED INVOICES -->
+    <section id="tab-processed" class="panel">
+      <div class="card">
+        <h2>Processed invoices</h2>
+        <p class="muted">
+          This is a record of every invoice the application has processed, from Single Invoice and Batch
+          Invoices runs alike. Point at Validation, Decision, or Payment for a definition. Point at a
+          red or amber value for the reason behind it. Click a row to open a full breakdown in a new
+          window. Click Edit on a row to propose a change to that invoice.
+        </p>
+      </div>
+      <div id="processed-table-wrap"></div>
+    </section>
+
+    <!-- EDIT REQUESTS -->
+    <section id="tab-edit-requests" class="panel">
+      <div class="card">
+        <h2>Edit requests</h2>
+        <p class="muted">
+          Every manual edit you have submitted, whether it is still pending, approved, or rejected. Open
+          Edit Approvals to act on a pending request.
+        </p>
+      </div>
+      <div id="edit-requests-table-wrap"></div>
+    </section>
+
+    <!-- EDIT APPROVALS -->
+    <section id="tab-edit-approvals" class="panel">
+      <div class="card">
+        <h2>Edit approvals</h2>
+        <p class="muted">
+          Escalated invoices and edit requests that are waiting for a decision before the application
+          acts on them.
+        </p>
+        <div class="notice">
+          In this demo, you resolve escalated invoices and approve your own edit requests yourself. In
+          a real deployment, a separate approver would handle these.
+        </div>
+      </div>
+      <div id="edit-approvals-table-wrap"></div>
+    </section>
+
+    <!-- INVENTORY -->
+    <section id="tab-inventory" class="panel">
+      <div class="card">
+        <h2>Inventory database</h2>
+        <p class="muted">
+          The validation agent checks every invoice line item against this data. Edit stock, unit
+          price, or category directly below, then click Save Changes. Click Reset to Original at
+          any time to restore the starting values.
+        </p>
+        <div class="row tight">
+          <button id="save-inventory-btn" class="btn btn-primary" type="button" disabled>Save Changes</button>
+          <button id="reset-inventory-tab-btn" class="btn btn-ghost" type="button">Reset to Original</button>
+        </div>
+        <div id="inventory-table-wrap"></div>
+      </div>
+    </section>
+
+    <!-- ACTION LOG -->
+    <section id="tab-action-log" class="panel">
+      <div class="card">
+        <h2>Action log</h2>
+        <p class="muted">
+          Every call the application makes to the LLM provider: reading a free-text or PDF invoice,
+          drafting an approval decision, and critiquing that draft. Each entry shows the invoice or
+          file it was for, the prompt sent, and either the model's result or the error if the call
+          failed.
+        </p>
+      </div>
+      <div id="action-log-table-wrap"></div>
+    </section>
+  </main>
+
+  <!-- SETTINGS MODAL -->
+  <div id="settings-overlay" class="overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Settings</h2>
+        <button id="close-settings" class="btn btn-icon" type="button">&times;</button>
+      </div>
+
+      <label class="field">
+        <span>LLM provider</span>
+        <select id="provider-select">
+          <option value="xai">xai (Grok)</option>
+          <option value="openai">openai</option>
+          <option value="anthropic">anthropic</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Model</span>
+        <select id="model-select"></select>
+      </label>
+
+      <label class="field">
+        <span>Batch invoices notifications</span>
+        <select id="batch-notify-select">
+          <option value="on_complete">Notify once, when the batch completes</option>
+          <option value="per_invoice">Notify for each invoice as it completes</option>
+        </select>
+      </label>
+
+      <div class="field">
+        <span>API key</span>
+        <div id="key-status" class="key-status">No key stored</div>
+        <input type="password" id="api-key-input" placeholder="Paste a new key here to save it" autocomplete="off" />
+        <div class="row tight">
+          <button id="save-settings" class="btn btn-primary" type="button">Save</button>
+          <button id="clear-key" class="btn btn-danger-ghost" type="button">Clear stored key</button>
+        </div>
+        <p class="muted small">
+          The application saves your key in a local file on this machine. Git does not track this file.
+          The application never sends the full key back to the browser. It only shows a masked version
+          of the key.
+        </p>
+      </div>
+
+      <div id="unconfigured-notice" class="notice" hidden>
+        This provider has no API key. JSON, CSV, and XML invoices still parse and validate on the Single
+        Invoice tab. Free-text and PDF invoices need a key. Every approval decision needs a key. Paste a
+        key above and click Save.
+      </div>
+
+      <div class="danger-zone">
+        <h3>Full reset</h3>
+        <p class="muted small">
+          This deletes every processed invoice, edit request, notification, and action log entry. It
+          also resets the inventory and clears the payment ledger, the same as Reset Inventory and
+          Ledger. This cannot be undone.
+        </p>
+        <button id="open-full-reset-btn" class="btn btn-danger-ghost" type="button">Full Reset&hellip;</button>
+
+        <div id="full-reset-confirm" class="full-reset-confirm" hidden>
+          <p class="muted small">
+            Type <strong>RESET</strong> below to confirm. The application deletes this data right away.
+          </p>
+          <input type="text" id="full-reset-input" placeholder="Type RESET to confirm" autocomplete="off" />
+          <div class="row tight">
+            <button id="confirm-full-reset-btn" class="btn btn-danger" type="button" disabled>Delete everything</button>
+            <button id="cancel-full-reset-btn" class="btn btn-ghost" type="button">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+  <div id="notification-toasts"></div>
+
+  <script src="/static/common.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

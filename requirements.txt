@@ -1,0 +1,13 @@
+pydantic>=2.13
+langgraph>=1.2
+openai>=2.53          # also serves xAI Grok — Grok speaks the OpenAI-compatible wire format
+anthropic>=0.121       # optional fallback LLM provider
+pdfplumber>=0.11
+python-dotenv>=1.2
+rich>=15.0
+fpdf2>=2.8              # only needed to (re)generate the sample PDFs
+pytest>=9.1
+
+fastapi>=0.141
+uvicorn>=0.52
+python-multipart>=0.0.20   # required by FastAPI for file uploads
