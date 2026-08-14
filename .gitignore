@@ -14,3 +14,7 @@ eval_report.json
 .env
 .secrets/
 uploaded_invoices/
+
+# Local engineering journal — kept on disk, not part of the public
+# submission. See README.md for the document meant to be read publicly.
+SOLUTION.md
