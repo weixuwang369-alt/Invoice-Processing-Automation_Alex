@@ -272,14 +272,13 @@ possible.
 | No internet needed for the mocked parts | The inventory database and the payment function are fully local. Only the LLM call itself is a live network call, which the assignment brief expects. |
 | Python, with the suggested libraries | `pdfplumber` for PDF text, `langgraph` for orchestration, plus `fastapi`, `pydantic`, and others for the web application. |
 
-## Additional Features (Above and Beyond)
+## Additional Features (Going Above and Beyond)
 
-The assignment's evaluation criteria explicitly reward going beyond the
-minimum: has the system been made into something real, with additional
+I tried my best to take this system beyond a basic working copy, while still maintaining a concretely carved-out scope: has the system been made into something real, with additional
 features, expanded assumptions, and added test coverage? This section
 answers that question in full detail. Each entry below was linked to
 from [How to Use](#how-to-use) or [How It Works](#how-it-works). This is
-where each of those short mentions is explained completely.
+where each of those short mentions is explained completely. I am most proud of the front-end, using my experience with "delightful" UI/UX experience, as well as the batch processing capabilities using parallel processing workflows.
 
 ### The Web Application
 
@@ -351,7 +350,7 @@ after another.
 This design keeps the safety guarantee of a strictly sequential batch,
 while running close to four times faster on a batch of mixed file
 formats. The concurrency limit is a constant in the code, so it is easy
-to raise or lower for a different LLM provider's rate limits.
+to raise or lower, to even all at once.
 
 ### Duplicate Payment Protection
 
