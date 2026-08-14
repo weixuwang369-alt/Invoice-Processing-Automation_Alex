@@ -272,7 +272,7 @@ possible.
 
 ## Additional Features (Above and Beyond)
 
-I tried my best to take this system beyond a basic working copy, while still maintaining a concretely carved-out aperture to answer the following questino: has the system been made into something real, with additional
+I wanted to showcase how I would take this system beyond a basic working program, while still maintaining a concretely carved-out aperture to satisfy the following goal and showcasing how I approach adding value to clients: has the system been made into something real, with additional
 features, expanded assumptions, and added test coverage? This section
 answers that question in full detail. Each entry below was linked to
 from [How to Use](#how-to-use) or [How It Works](#how-it-works). This is
