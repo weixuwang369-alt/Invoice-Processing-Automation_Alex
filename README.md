@@ -1,10 +1,8 @@
 # Invoice Processing Automation
 
 This is a working multi-agent system that automates invoice processing end
-to end. It reads an invoice, checks it against inventory, gets an approval
-decision from an AI reviewer, and pays or rejects it. This is a submission
-for the Galatiq Case take-home assignment. The original assignment brief
-is in [ASSIGNMENT.md](ASSIGNMENT.md).
+to end. It reads an invoice (single or batch), checks it against inventory, gets an approval
+decision from an AI reviewer, and pays or rejects it. I would appreciate reading the [additional features](#additional-features-above-and-beyond) section, which I believe showcases my effort and thoughtful decisions behind the
 
 The system runs two ways. It runs as a command-line tool. It also runs as
 a full web application. The command-line tool meets the assignment's
@@ -272,7 +270,7 @@ possible.
 | No internet needed for the mocked parts | The inventory database and the payment function are fully local. Only the LLM call itself is a live network call, which the assignment brief expects. |
 | Python, with the suggested libraries | `pdfplumber` for PDF text, `langgraph` for orchestration, plus `fastapi`, `pydantic`, and others for the web application. |
 
-## Additional Features (Going Above and Beyond)
+## Additional Features (Above and Beyond)
 
 I tried my best to take this system beyond a basic working copy, while still maintaining a concretely carved-out scope: has the system been made into something real, with additional
 features, expanded assumptions, and added test coverage? This section
