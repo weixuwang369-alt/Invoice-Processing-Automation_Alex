@@ -4,11 +4,11 @@ This is a working multi-agent system that automates invoice processing end
 to end. It reads an invoice, checks it against inventory, gets an approval
 decision from an AI reviewer, and pays or rejects it. This is a submission
 for the Galatiq Case take-home assignment. The original assignment brief
-is in [ASSIGNMENT.md](ASSIGNMENT.md), unmodified.
+is in [ASSIGNMENT.md](ASSIGNMENT.md).
 
 The system runs two ways. It runs as a command-line tool. It also runs as
-a full web application. The command-line tool meets the assignment's exact
-specification. The web application goes far beyond it. This README
+a full web application. The command-line tool meets the assignment's
+specification, whereas the web application goes beyond it for a delightful experience. This README
 explains both.
 
 ## Table of Contents
